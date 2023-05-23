@@ -11,16 +11,16 @@ describe('getWalletConnectConnector', () => {
     it('without projectId', () => {
       const connector = getWalletConnectConnector({ chains });
       expect(connector.id).toBe('walletConnectLegacy');
-      expectTypeOf(connector).toMatchTypeOf<WalletConnectLegacyConnector>();
+      expectTypeOf(connector).toEqualTypeOf<WalletConnectLegacyConnector>();
     });
     it('with projectId', () => {
       const connector = getWalletConnectConnector({ chains, projectId });
       expect(connector.id).toBe('walletConnectLegacy');
-      expectTypeOf(connector).toMatchTypeOf<WalletConnectLegacyConnector>();
+      expectTypeOf(connector).toEqualTypeOf<WalletConnectLegacyConnector>();
     });
     it('qrcode defaults', () => {
       const connector = getWalletConnectConnector({ chains });
-      expect(connector.options.qrcode).toBe(false);
+      expect(connector.options?.qrcode).toBe(false);
     });
   });
 
@@ -31,8 +31,8 @@ describe('getWalletConnectConnector', () => {
         version: '1',
       });
       expect(connector.id).toBe('walletConnectLegacy');
-      expectTypeOf(connector).toMatchTypeOf<WalletConnectLegacyConnector>();
-      expect(connector.options.qrcode).toBe(false);
+      expectTypeOf(connector).toEqualTypeOf<WalletConnectLegacyConnector>();
+      expect(connector.options?.qrcode).toBe(false);
     });
     it('with options', () => {
       const connector = getWalletConnectConnector({
@@ -47,8 +47,8 @@ describe('getWalletConnectConnector', () => {
         version: '1',
       });
       expect(connector.id).toBe('walletConnectLegacy');
-      expectTypeOf(connector).toMatchTypeOf<WalletConnectLegacyConnector>();
-      expect(connector.options.qrcode).toBe(true);
+      expectTypeOf(connector).toEqualTypeOf<WalletConnectLegacyConnector>();
+      expect(connector.options?.qrcode).toBe(true);
     });
   });
 
@@ -60,7 +60,7 @@ describe('getWalletConnectConnector', () => {
         version: '2',
       });
       expect(connector.id).toBe('walletConnectLegacy');
-      expectTypeOf(connector).toMatchTypeOf<WalletConnectLegacyConnector>();
+      expectTypeOf(connector).toEqualTypeOf<WalletConnectLegacyConnector>();
     });
     it('with options', () => {
       const connector = getWalletConnectConnector({
@@ -72,7 +72,7 @@ describe('getWalletConnectConnector', () => {
         version: '2',
       });
       expect(connector.id).toBe('walletConnectLegacy');
-      expectTypeOf(connector).toMatchTypeOf<WalletConnectLegacyConnector>();
+      expectTypeOf(connector).toEqualTypeOf<WalletConnectLegacyConnector>();
     });
   });
 });

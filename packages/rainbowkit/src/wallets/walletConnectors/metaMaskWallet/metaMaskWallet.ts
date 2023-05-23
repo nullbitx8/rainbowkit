@@ -98,6 +98,7 @@ export const metaMaskWallet = ({
         : new MetaMaskConnector({
             chains,
             options: {
+              // @ts-ignore - MetaMaskConnector accepts this option, but doesn't expose type
               getProvider: () =>
                 providers
                   ? providers.find(isMetaMask)
@@ -109,6 +110,7 @@ export const metaMaskWallet = ({
           });
 
       const getUri = async () => {
+        // @ts-ignore - connector is appropriately typed as WalletConnectLegacyConnector or WalletConnectConnector
         const { uri } = (await connector.getProvider()).connector;
 
         return isAndroid()

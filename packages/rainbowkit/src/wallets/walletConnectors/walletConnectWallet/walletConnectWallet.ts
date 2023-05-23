@@ -11,13 +11,14 @@ import type {
 export interface WalletConnectWalletOptions {
   projectId?: string;
   chains: Chain[];
-  options?: WalletConnectLegacyConnectorOptions | WalletConnectConnectorOptions;
+  options?:
+    | WalletConnectLegacyConnectorOptions
+    | Omit<WalletConnectConnectorOptions, 'projectId'>;
 }
 
 export const walletConnectWallet = ({
   chains,
   options,
-  projectId,
 }: WalletConnectWalletOptions): Wallet => ({
   id: 'walletConnect',
   name: 'WalletConnect',
@@ -31,7 +32,6 @@ export const walletConnectWallet = ({
       chains,
       options: {
         qrcode: ios,
-        projectId,
         ...options,
       },
     });
