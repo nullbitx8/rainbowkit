@@ -3,6 +3,7 @@ import { Chain } from '../../../components/RainbowKitProvider/RainbowKitChainCon
 import { isAndroid } from '../../../utils/isMobile';
 import { Wallet } from '../../Wallet';
 import { getWalletConnectConnector } from '../../getWalletConnectConnector';
+import { listenForUri } from '../../listenForUri';
 
 export interface OmniWalletOptions {
   projectId?: string;
@@ -24,20 +25,24 @@ export const omniWallet = ({
     qrCode: 'https://omniwallet.app.link',
   },
   createConnector: () => {
-    const connector = getWalletConnectConnector({ projectId, chains });
+    const connector = getWalletConnectConnector({
+      version: '2',
+      projectId,
+      chains,
+    });
 
     return {
       connector,
       mobile: {
         getUri: async () => {
-          const { uri } = (await connector.getProvider()).connector;
+          const uri = await listenForUri(connector);
           return isAndroid()
             ? uri
             : `https://links.steakwallet.fi/wc?uri=${encodeURIComponent(uri)}`;
         },
       },
       qrCode: {
-        getUri: async () => (await connector.getProvider()).connector.uri,
+        getUri: () => listenForUri(connector),
         instructions: {
           learnMoreUrl: 'https://omni.app/support',
           steps: [

@@ -5,6 +5,7 @@ import { Chain } from '../../../components/RainbowKitProvider/RainbowKitChainCon
 import { isAndroid } from '../../../utils/isMobile';
 import { Wallet } from '../../Wallet';
 import { getWalletConnectConnector } from '../../getWalletConnectConnector';
+import { listenForUri } from '../../listenForUri';
 
 export interface OKXWalletOptions {
   projectId?: string;
@@ -44,7 +45,7 @@ export const okxWallet = ({
     },
     createConnector: () => {
       const connector = shouldUseWalletConnect
-        ? getWalletConnectConnector({ projectId, chains })
+        ? getWalletConnectConnector({ version: '2', projectId, chains })
         : new InjectedConnector({
             chains,
             options: {
@@ -59,8 +60,7 @@ export const okxWallet = ({
         mobile: {
           getUri: shouldUseWalletConnect
             ? async () => {
-                // @ts-ignore - connector is appropriately typed as WalletConnectLegacyConnector or WalletConnectConnector
-                const { uri } = (await connector.getProvider()).connector;
+                const uri = await listenForUri(connector);
                 return isAndroid()
                   ? uri
                   : `okex://main/wc?uri=${encodeURIComponent(uri)}`;
@@ -69,8 +69,7 @@ export const okxWallet = ({
         },
         qrCode: shouldUseWalletConnect
           ? {
-              // @ts-ignore - connector is appropriately typed as WalletConnectLegacyConnector or WalletConnectConnector
-              getUri: async () => (await connector.getProvider()).connector.uri,
+              getUri: () => listenForUri(connector),
               instructions: {
                 learnMoreUrl: 'https://okx.com/web3/',
                 steps: [

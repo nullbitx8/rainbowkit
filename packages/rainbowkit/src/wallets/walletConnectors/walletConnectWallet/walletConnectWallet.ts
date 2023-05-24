@@ -7,6 +7,7 @@ import type {
   WalletConnectConnectorOptions,
   WalletConnectLegacyConnectorOptions,
 } from '../../getWalletConnectConnector';
+import { listenForUri } from '../../listenForUri';
 
 export interface WalletConnectWalletOptions {
   projectId?: string;
@@ -19,6 +20,7 @@ export interface WalletConnectWalletOptions {
 export const walletConnectWallet = ({
   chains,
   options,
+  projectId,
 }: WalletConnectWalletOptions): Wallet => ({
   id: 'walletConnect',
   name: 'WalletConnect',
@@ -28,15 +30,16 @@ export const walletConnectWallet = ({
     const ios = isIOS();
 
     const connector = getWalletConnectConnector({
-      version: '1',
+      version: '2',
       chains,
+      projectId,
       options: {
-        qrcode: ios,
+        showQrModal: ios,
         ...options,
       },
     });
 
-    const getUri = async () => (await connector.getProvider()).connector.uri;
+    const getUri = () => listenForUri(connector);
 
     return {
       connector,

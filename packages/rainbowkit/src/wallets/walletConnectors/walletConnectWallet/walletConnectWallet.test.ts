@@ -15,7 +15,7 @@ describe('walletConnectWallet', () => {
   it('with projectId', () => {
     const wallet = walletConnectWallet({ chains, projectId });
     const { connector } = wallet.createConnector();
-    expect(connector.id).toBe('walletConnectLegacy');
+    expect(connector.id).toBe('walletConnect');
   });
 
   it('v1 options', () => {
@@ -28,7 +28,6 @@ describe('walletConnectWallet', () => {
           mobileLinks: ['rainbow'],
         },
       },
-      projectId,
     });
     const { connector } = wallet.createConnector();
 
@@ -48,9 +47,9 @@ describe('walletConnectWallet', () => {
     });
     const { connector } = wallet.createConnector();
 
-    expect(connector.id).toBe('walletConnectLegacy');
+    expect(connector.id).toBe('walletConnect');
 
-    expect(connector.options.qrcode).toBe(false);
+    expect(connector.options.qrcode).toBe(undefined);
     expect(connector.options.showQrModal).toBe(true);
     // needs additional tests once WalletConnectConnector migration is complete
   });

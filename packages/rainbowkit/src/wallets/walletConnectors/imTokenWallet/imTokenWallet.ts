@@ -2,6 +2,7 @@
 import { Chain } from '../../../components/RainbowKitProvider/RainbowKitChainContext';
 import { Wallet } from '../../Wallet';
 import { getWalletConnectConnector } from '../../getWalletConnectConnector';
+import { listenForUri } from '../../listenForUri';
 
 export interface ImTokenWalletOptions {
   projectId?: string;
@@ -23,18 +24,22 @@ export const imTokenWallet = ({
     qrCode: 'https://token.im/download',
   },
   createConnector: () => {
-    const connector = getWalletConnectConnector({ projectId, chains });
+    const connector = getWalletConnectConnector({
+      version: '2',
+      projectId,
+      chains,
+    });
 
     return {
       connector,
       mobile: {
         getUri: async () => {
-          const { uri } = (await connector.getProvider()).connector;
+          const uri = await listenForUri(connector);
           return `imtokenv2://wc?uri=${encodeURIComponent(uri)}`;
         },
       },
       qrCode: {
-        getUri: async () => (await connector.getProvider()).connector.uri,
+        getUri: () => listenForUri(connector),
         instructions: {
           learnMoreUrl:
             typeof window !== 'undefined' &&

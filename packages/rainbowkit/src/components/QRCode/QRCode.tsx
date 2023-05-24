@@ -5,13 +5,15 @@ import { Box, BoxProps } from '../Box/Box';
 import { QRCodeBackgroundClassName } from '../ConnectOptions/DesktopOptions.css';
 
 const generateMatrix = (
-  value: string,
+  value: string | undefined,
   errorCorrectionLevel: QRCodeUtil.QRCodeErrorCorrectionLevel
 ) => {
-  const arr = Array.prototype.slice.call(
-    QRCodeUtil.create(value, { errorCorrectionLevel }).modules.data,
-    0
-  );
+  const arr = value
+    ? Array.prototype.slice.call(
+        QRCodeUtil.create(value, { errorCorrectionLevel }).modules.data,
+        0
+      )
+    : [];
   const sqrt = Math.sqrt(arr.length);
   return arr.reduce(
     (rows, key, index) =>
@@ -29,7 +31,7 @@ type Props = {
   logoMargin?: number;
   logoSize?: number;
   size?: number;
-  uri: string;
+  uri?: string;
 };
 
 export function QRCode({
@@ -121,7 +123,7 @@ export function QRCode({
       borderColor="generalBorder"
       borderRadius="menuButton"
       borderStyle="solid"
-      borderWidth="1"
+      borderWidth={uri ? '1' : '0'}
       className={QRCodeBackgroundClassName}
       padding={padding}
       width="max"
@@ -154,18 +156,27 @@ export function QRCode({
             width={logoSize}
           />
         </Box>
-        <svg height={size} style={{ all: 'revert' }} width={size}>
-          <defs>
-            <clipPath id="clip-wrapper">
-              <rect height={logoWrapperSize} width={logoWrapperSize} />
-            </clipPath>
-            <clipPath id="clip-logo">
-              <rect height={logoSize} width={logoSize} />
-            </clipPath>
-          </defs>
-          <rect fill="transparent" height={size} width={size} />
-          {dots}
-        </svg>
+        <Box
+          style={{
+            opacity: uri ? 1 : 0,
+            transition: uri ? '0.3s ease' : undefined,
+          }}
+        >
+          {uri && (
+            <svg height={size} style={{ all: 'revert' }} width={size}>
+              <defs>
+                <clipPath id="clip-wrapper">
+                  <rect height={logoWrapperSize} width={logoWrapperSize} />
+                </clipPath>
+                <clipPath id="clip-logo">
+                  <rect height={logoSize} width={logoSize} />
+                </clipPath>
+              </defs>
+              <rect fill="transparent" height={size} width={size} />
+              {dots}
+            </svg>
+          )}
+        </Box>
       </Box>
     </Box>
   );

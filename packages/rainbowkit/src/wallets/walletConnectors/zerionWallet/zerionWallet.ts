@@ -5,6 +5,7 @@ import { Chain } from '../../../components/RainbowKitProvider/RainbowKitChainCon
 import { isAndroid } from '../../../utils/isMobile';
 import { Wallet } from '../../Wallet';
 import { getWalletConnectConnector } from '../../getWalletConnectConnector';
+import { listenForUri } from '../../listenForUri';
 
 export interface ZerionWalletOptions {
   projectId?: string;
@@ -43,7 +44,7 @@ export const zerionWallet = ({
     },
     createConnector: () => {
       const connector = shouldUseWalletConnect
-        ? getWalletConnectConnector({ projectId, chains })
+        ? getWalletConnectConnector({ version: '2', projectId, chains })
         : new InjectedConnector({
             chains,
             options: {
@@ -57,8 +58,7 @@ export const zerionWallet = ({
           });
 
       const getUri = async () => {
-        // @ts-ignore - connector is appropriately typed as WalletConnectLegacyConnector or WalletConnectConnector
-        const { uri } = (await connector.getProvider()).connector;
+        const uri = await listenForUri(connector);
 
         return isAndroid()
           ? uri

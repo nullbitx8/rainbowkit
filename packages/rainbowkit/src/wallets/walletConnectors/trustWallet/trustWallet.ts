@@ -4,6 +4,7 @@ import { InjectedConnector } from 'wagmi/connectors/injected';
 import { Chain } from '../../../components/RainbowKitProvider/RainbowKitChainContext';
 import { InstructionStepName, Wallet } from '../../Wallet';
 import { getWalletConnectConnector } from '../../getWalletConnectConnector';
+import { listenForUri } from '../../listenForUri';
 
 declare global {
   interface Window {
@@ -86,21 +87,17 @@ export const trustWallet = ({
     },
     createConnector: () => {
       const getUriMobile = async () => {
-        // @ts-ignore - connector is appropriately typed as WalletConnectLegacyConnector or WalletConnectConnector
-        const { uri } = (await connector.getProvider()).connector;
-
+        const uri = await listenForUri(connector);
         return `https://link.trustwallet.com/wc?uri=${encodeURIComponent(uri)}`;
       };
 
       const getUriQR = async () => {
-        // @ts-ignore - connector is appropriately typed as WalletConnectLegacyConnector or WalletConnectConnector
-        const { uri } = (await connector.getProvider()).connector;
-
+        const uri = await listenForUri(connector);
         return uri;
       };
 
       const connector = shouldUseWalletConnect
-        ? getWalletConnectConnector({ projectId, chains })
+        ? getWalletConnectConnector({ version: '2', projectId, chains })
         : new InjectedConnector({
             chains,
             options: {

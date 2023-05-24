@@ -1,6 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import { mainnet } from 'wagmi/chains';
-import { WalletConnectLegacyConnector } from 'wagmi/connectors/walletConnectLegacy';
+import type { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
+import type { WalletConnectLegacyConnector } from 'wagmi/connectors/walletConnectLegacy';
 import { getWalletConnectConnector } from './getWalletConnectConnector';
 
 describe('getWalletConnectConnector', () => {
@@ -59,8 +60,8 @@ describe('getWalletConnectConnector', () => {
         projectId,
         version: '2',
       });
-      expect(connector.id).toBe('walletConnectLegacy');
-      expectTypeOf(connector).toEqualTypeOf<WalletConnectLegacyConnector>();
+      expect(connector.id).toBe('walletConnect');
+      expectTypeOf(connector).toEqualTypeOf<WalletConnectConnector>();
     });
     it('with options', () => {
       const connector = getWalletConnectConnector({
@@ -71,8 +72,8 @@ describe('getWalletConnectConnector', () => {
         projectId,
         version: '2',
       });
-      expect(connector.id).toBe('walletConnectLegacy');
-      expectTypeOf(connector).toEqualTypeOf<WalletConnectLegacyConnector>();
+      expect(connector.id).toBe('walletConnect');
+      expectTypeOf(connector).toEqualTypeOf<WalletConnectConnector>();
     });
   });
 });

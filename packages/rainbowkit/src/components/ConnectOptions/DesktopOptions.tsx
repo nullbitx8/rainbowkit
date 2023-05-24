@@ -89,6 +89,11 @@ export function DesktopOptions({ onClose }: { onClose: () => void }) {
     setSelectedOptionId(wallet.id);
 
     if (wallet.ready) {
+      const sWallet = wallets.find(w => wallet.id === w.id);
+      setSelectedWallet(sWallet);
+      changeWalletStep(WalletStep.Connect);
+      setQrCodeUri(undefined);
+
       // We need to guard against "onConnecting" callbacks being fired
       // multiple times since connector instances can be shared between
       // wallets. Ideally wagmi would let us scope the callback to the
@@ -99,16 +104,13 @@ export function DesktopOptions({ onClose }: { onClose: () => void }) {
         if (callbackFired) return;
         callbackFired = true;
 
-        const sWallet = wallets.find(w => wallet.id === w.id);
         const uri = await sWallet?.qrCode?.getUri();
-        setQrCodeUri(uri);
 
         // This timeout prevents the UI from flickering if connection is instant,
         // otherwise users will see a flash of the "connecting" state.
         setTimeout(
           () => {
-            setSelectedWallet(sWallet);
-            changeWalletStep(WalletStep.Connect);
+            setQrCodeUri(uri);
           },
           uri ? 0 : 50
         );

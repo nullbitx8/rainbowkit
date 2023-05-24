@@ -185,7 +185,7 @@ export function ConnectDetail({
 
   const hasExtension = !!wallet.extensionDownloadUrl;
   const hasQrCodeAndExtension = downloadUrls?.qrCode && hasExtension;
-  const hasQrCode = qrCode && qrCodeUri;
+  const hasQrCode = qrCode;
 
   const secondaryAction: {
     description: string;

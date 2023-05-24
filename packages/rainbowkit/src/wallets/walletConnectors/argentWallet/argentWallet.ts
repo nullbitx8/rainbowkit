@@ -3,6 +3,7 @@ import { Chain } from '../../../components/RainbowKitProvider/RainbowKitChainCon
 import { isAndroid } from '../../../utils/isMobile';
 import { Wallet } from '../../Wallet';
 import { getWalletConnectConnector } from '../../getWalletConnectConnector';
+import { listenForUri } from '../../listenForUri';
 
 export interface ArgentWalletOptions {
   projectId?: string;
@@ -25,13 +26,17 @@ export const argentWallet = ({
     qrCode: 'https://argent.link/app',
   },
   createConnector: () => {
-    const connector = getWalletConnectConnector({ projectId, chains });
+    const connector = getWalletConnectConnector({
+      version: '2',
+      projectId,
+      chains,
+    });
 
     return {
       connector,
       mobile: {
         getUri: async () => {
-          const { uri } = (await connector.getProvider()).connector;
+          const uri = await listenForUri(connector);
 
           return isAndroid()
             ? uri
@@ -39,7 +44,7 @@ export const argentWallet = ({
         },
       },
       qrCode: {
-        getUri: async () => (await connector.getProvider()).connector.uri,
+        getUri: () => listenForUri(connector),
         instructions: {
           learnMoreUrl: 'https://argent.xyz/learn/what-is-a-crypto-wallet/',
           steps: [

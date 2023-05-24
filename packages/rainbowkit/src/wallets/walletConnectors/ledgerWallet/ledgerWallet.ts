@@ -3,6 +3,7 @@ import { Chain } from '../../../components/RainbowKitProvider/RainbowKitChainCon
 import { isAndroid } from '../../../utils/isMobile';
 import { Wallet } from '../../Wallet';
 import { getWalletConnectConnector } from '../../getWalletConnectConnector';
+import { listenForUri } from '../../listenForUri';
 
 export interface LedgerWalletOptions {
   projectId?: string;
@@ -24,13 +25,17 @@ export const ledgerWallet = ({
     qrCode: 'https://ledger.com/ledger-live',
   },
   createConnector: () => {
-    const connector = getWalletConnectConnector({ projectId, chains });
+    const connector = getWalletConnectConnector({
+      version: '2',
+      projectId,
+      chains,
+    });
 
     return {
       connector,
       mobile: {
         getUri: async () => {
-          const { uri } = (await connector.getProvider()).connector;
+          const uri = await listenForUri(connector);
           return isAndroid()
             ? uri
             : `ledgerlive://wc?uri=${encodeURIComponent(uri)}`;
@@ -38,7 +43,7 @@ export const ledgerWallet = ({
       },
       desktop: {
         getUri: async () => {
-          const { uri } = (await connector.getProvider()).connector;
+          const uri = await listenForUri(connector);
           return `ledgerlive://wc?uri=${encodeURIComponent(uri)}`;
         },
       },
