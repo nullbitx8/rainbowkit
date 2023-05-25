@@ -171,15 +171,7 @@ export function ConnectDetail({
   reconnect: (wallet: WalletConnector) => void;
   wallet: WalletConnector;
 }) {
-  const {
-    downloadUrls,
-    iconBackground,
-    iconUrl,
-    name,
-    qrCode,
-    ready,
-    showWalletConnectModal,
-  } = wallet;
+  const { downloadUrls, iconBackground, iconUrl, name, qrCode, ready } = wallet;
   const getDesktopDeepLink = wallet.desktop?.getUri;
   const safari = isSafari();
 
@@ -192,26 +184,25 @@ export function ConnectDetail({
     label: string;
     onClick?: () => void;
     href?: string;
-  } | null = showWalletConnectModal
-    ? {
-        description: `Need the ${
-          compactModeEnabled ? '' : 'official'
-        } WalletConnect modal?`,
-        label: 'OPEN',
-        onClick: showWalletConnectModal,
-      }
-    : hasQrCode
-    ? {
-        description: `Don\u2019t have ${name}?`,
-        label: 'GET',
-        onClick: () =>
-          changeWalletStep(
-            hasQrCodeAndExtension
-              ? WalletStep.DownloadOptions
-              : WalletStep.Download
-          ),
-      }
-    : null;
+  } | null =
+    name === 'WalletConnect'
+      ? {
+          description: `Don\u2019t have a WalletConnect wallet?`,
+          label: 'GET',
+          onClick: () => changeWalletStep(WalletStep.Get),
+        }
+      : hasQrCode
+      ? {
+          description: `Don\u2019t have ${name}?`,
+          label: 'GET',
+          onClick: () =>
+            changeWalletStep(
+              hasQrCodeAndExtension
+                ? WalletStep.DownloadOptions
+                : WalletStep.Download
+            ),
+        }
+      : null;
 
   const { width: windowWidth } = useWindowSize();
   const smallWindow = windowWidth && windowWidth < 768;

@@ -14,7 +14,6 @@ export interface WalletConnector extends WalletInstance {
   ready?: boolean;
   connect?: ReturnType<typeof useConnect>['connectAsync'];
   onConnecting?: (fn: () => void) => void;
-  showWalletConnectModal?: () => void;
   recent: boolean;
   mobileDownloadUrl?: string;
   extensionDownloadUrl?: string;
@@ -94,23 +93,6 @@ export function useWalletConnectors(): WalletConnector[] {
         ),
       ready: (wallet.installed ?? true) && wallet.connector.ready,
       recent,
-      showWalletConnectModal: wallet.walletConnectModalConnector
-        ? async () => {
-            try {
-              await connectWallet(
-                wallet.id,
-                wallet.walletConnectModalConnector!
-              );
-            } catch (err) {
-              // @ts-expect-error
-              const isUserRejection = err.name === 'UserRejectedRequestError';
-
-              if (!isUserRejection) {
-                throw err;
-              }
-            }
-          }
-        : undefined,
     });
   });
   return walletConnectors;

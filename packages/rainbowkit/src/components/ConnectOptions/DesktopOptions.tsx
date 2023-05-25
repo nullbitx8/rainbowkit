@@ -172,9 +172,23 @@ export function DesktopOptions({ onClose }: { onClose: () => void }) {
       initialWalletStep === WalletStep.Get
     ) {
       clearSelectedWallet();
-    } else if (!isBack && newWalletStep === WalletStep.Get) {
+    } else if (
+      !isBack &&
+      newWalletStep === WalletStep.Get &&
+      initialWalletStep !== WalletStep.Connect
+    ) {
       setInitialWalletStep(WalletStep.Get);
-    } else if (!isBack && newWalletStep === WalletStep.Connect) {
+    } else if (
+      !isBack &&
+      newWalletStep === WalletStep.DownloadOptions &&
+      initialWalletStep === WalletStep.Connect
+    ) {
+      setInitialWalletStep(WalletStep.Get);
+    } else if (
+      !isBack &&
+      newWalletStep === WalletStep.Connect &&
+      initialWalletStep !== WalletStep.Get
+    ) {
       setInitialWalletStep(WalletStep.Connect);
     }
     setWalletStep(newWalletStep);
@@ -217,9 +231,12 @@ export function DesktopOptions({ onClose }: { onClose: () => void }) {
     case WalletStep.Get:
       walletContent = <GetDetail getWalletDownload={getWalletDownload} />;
       headerLabel = 'Get a Wallet';
-      headerBackButtonLink = compactModeEnabled
-        ? WalletStep.LearnCompact
-        : WalletStep.None;
+      headerBackButtonLink =
+        initialWalletStep === WalletStep.Connect
+          ? WalletStep.Connect
+          : compactModeEnabled
+          ? WalletStep.LearnCompact
+          : WalletStep.None;
       break;
     case WalletStep.Connect:
       walletContent = selectedWallet && (
@@ -252,8 +269,7 @@ export function DesktopOptions({ onClose }: { onClose: () => void }) {
         />
       );
       headerLabel = selectedWallet && `Get ${selectedWallet.name}`;
-      headerBackButtonLink =
-        hasExtensionAndMobile && WalletStep.Connect ? initialWalletStep : null;
+      headerBackButtonLink = hasExtensionAndMobile ? initialWalletStep : null;
       break;
     case WalletStep.Download:
       walletContent = selectedWallet && (
