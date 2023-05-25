@@ -69,6 +69,8 @@ function WalletButton({ wallet }: { wallet: WalletConnector }) {
               setWalletConnectDeepLink({ mobileUri, name });
             }
 
+            window.location.href = mobileUri;
+            /*
             if (mobileUri.startsWith('http')) {
               // Workaround for https://github.com/rainbow-me/rainbowkit/issues/524.
               // Using 'window.open' causes issues on iOS in non-Safari browsers and
@@ -87,6 +89,7 @@ function WalletButton({ wallet }: { wallet: WalletConnector }) {
             } else {
               window.location.href = mobileUri;
             }
+            */
           }
         });
       }, [connector, connect, getMobileUri, onConnecting, name])}
