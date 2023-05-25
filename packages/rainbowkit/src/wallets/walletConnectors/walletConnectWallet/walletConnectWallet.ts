@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { Chain } from '../../../components/RainbowKitProvider/RainbowKitChainContext';
-import { isIOS } from '../../../utils/isMobile';
+import { isMobile } from '../../../utils/isMobile';
 import { Wallet } from '../../Wallet';
 import { getWalletConnectConnector } from '../../getWalletConnectConnector';
 import type {
@@ -26,15 +26,14 @@ export const walletConnectWallet = ({
   name: 'WalletConnect',
   iconUrl: async () => (await import('./walletConnectWallet.svg')).default,
   iconBackground: '#3b99fc',
+  hidden: () => isMobile(),
   createConnector: () => {
-    const ios = isIOS();
-
     const connector = getWalletConnectConnector({
       version: '2',
       chains,
       projectId,
       options: {
-        showQrModal: ios,
+        showQrModal: false,
         ...options,
       },
     });
@@ -43,12 +42,8 @@ export const walletConnectWallet = ({
 
     return {
       connector,
-      ...(ios
-        ? {}
-        : {
-            mobile: { getUri },
-            qrCode: { getUri },
-          }),
+      mobile: { getUri },
+      qrCode: { getUri },
     };
   },
 });
