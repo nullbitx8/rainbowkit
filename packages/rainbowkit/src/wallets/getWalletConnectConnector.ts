@@ -30,8 +30,10 @@ function createConnector(
   version: WalletConnectVersion,
   config: WalletConnectLegacyConnectorConfig | WalletConnectConnectorConfig
 ) {
-  // ignoring `version` until v2 delayed uri fetch changes are merged
-  const connector = new WalletConnectLegacyConnector(config);
+  const connector =
+    version === '2'
+      ? new WalletConnectConnector(config)
+      : new WalletConnectLegacyConnector(config);
   sharedConnectors.set(JSON.stringify(config), connector);
   return connector;
 }
@@ -59,7 +61,7 @@ export function getWalletConnectConnector({
   chains,
   options = {},
   projectId,
-  version = '1',
+  version = '2',
 }: {
   chains: Chain[];
   projectId?: string;
@@ -71,6 +73,7 @@ export function getWalletConnectConnector({
     options: {
       projectId,
       qrcode: false,
+      showQrModal: false,
       ...options,
     },
   };
