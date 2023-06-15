@@ -1,5 +1,6 @@
 import React, { ReactNode, useContext } from 'react';
 import { useAccount, useBalance, useNetwork } from 'wagmi';
+import { useCoinbaseBnsName } from '../../hooks/useCoinbaseBnsName';
 import { useIsMounted } from '../../hooks/useIsMounted';
 import { useMainnetEnsAvatar } from '../../hooks/useMainnetEnsAvatar';
 import { useMainnetEnsName } from '../../hooks/useMainnetEnsName';
@@ -61,6 +62,7 @@ export function ConnectButtonRenderer({
   const mounted = useIsMounted();
   const { address } = useAccount();
   const ensName = useMainnetEnsName(address);
+  const bnsName = useCoinbaseBnsName(address);
   const ensAvatar = useMainnetEnsAvatar(ensName);
   const { data: balanceData } = useBalance({ address });
   const { chain: activeChain } = useNetwork();
@@ -102,11 +104,11 @@ export function ConnectButtonRenderer({
               balanceFormatted: balanceData?.formatted,
               balanceSymbol: balanceData?.symbol,
               displayBalance,
-              displayName: ensName
-                ? formatENS(ensName)
+              displayName: bnsName
+                ? formatENS(bnsName)
                 : formatAddress(address),
               ensAvatar: ensAvatar ?? undefined,
-              ensName: ensName ?? undefined,
+              ensName: bnsName ?? undefined,
               hasPendingTransactions,
             }
           : undefined,

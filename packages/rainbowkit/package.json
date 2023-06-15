@@ -1,7 +1,7 @@
 {
-  "name": "@rainbow-me/rainbowkit",
-  "version": "1.0.1",
-  "description": "The best way to connect a wallet",
+  "name": "@nullbitx8/rainbowkit",
+  "version": "1.0.6",
+  "description": "Forked rainbowkit (v.1.0.1) that shows BNS (base name service) name after connecting a wallet",
   "files": [
     "dist",
     "styles.css",

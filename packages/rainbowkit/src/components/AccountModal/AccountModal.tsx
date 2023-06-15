@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAccount, useBalance, useDisconnect } from 'wagmi';
+import { useCoinbaseBnsName } from '../../hooks/useCoinbaseBnsName';
 import { useMainnetEnsAvatar } from '../../hooks/useMainnetEnsAvatar';
 import { useMainnetEnsName } from '../../hooks/useMainnetEnsName';
 import { Dialog } from '../Dialog/Dialog';
@@ -15,6 +16,7 @@ export function AccountModal({ onClose, open }: AccountModalProps) {
   const { address } = useAccount();
   const { data: balanceData } = useBalance({ address });
   const ensName = useMainnetEnsName(address);
+  const bnsName = useCoinbaseBnsName(address);
   const ensAvatar = useMainnetEnsAvatar(ensName);
   const { disconnect } = useDisconnect();
 
@@ -33,7 +35,7 @@ export function AccountModal({ onClose, open }: AccountModalProps) {
               address={address}
               balanceData={balanceData}
               ensAvatar={ensAvatar}
-              ensName={ensName}
+              ensName={bnsName}
               onClose={onClose}
               onDisconnect={disconnect}
             />
